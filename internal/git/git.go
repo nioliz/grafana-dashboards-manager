@@ -54,6 +54,7 @@ func NewRepository(cfg *config.GitSettings) (r *Repository, invalidRepo bool, er
 
 	// Load authentication data in the structure instance.
 	err = r.getAuth()
+	logrus.Info("NewRepository")
 	return
 }
 
@@ -329,7 +330,7 @@ func (r *Repository) pull() error {
 	if err != nil {
 		return err
 	}
-
+	logrus.Info("git.pull")
 	// Get its worktree.
 	w, err := repo.Worktree()
 	if err != nil {
