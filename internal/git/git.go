@@ -287,7 +287,7 @@ func (r *Repository) GetFilesContentsAtCommit(commit *object.Commit) (map[string
 // parsing it.
 func (r *Repository) getAuth() error {
 
-	if r.cfg.URL[0:3] == "http" {
+	if r.cfg.URL[0:4] == "http" {
 		logrus.WithFields(logrus.Fields{
 			"URL": r.cfg.URL,
 		}).Info("http[s] link found")
