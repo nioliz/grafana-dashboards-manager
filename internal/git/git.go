@@ -288,10 +288,14 @@ func (r *Repository) GetFilesContentsAtCommit(commit *object.Commit) (map[string
 func (r *Repository) getAuth() error {
 
 	if r.cfg.URL[0:3] == "http" {
-		logrus.Info("http[s] link found")
+		logrus.WithFields(logrus.Fields{
+			"URL": r.cfg.URL,
+		}).Info("http[s] link found")
 		r.auth = &githttp.TokenAuth{Token: r.cfg.Token}
 	} else {
-		logrus.Info("ssh link found")
+		logrus.WithFields(logrus.Fields{
+			"URL": r.cfg.URL,
+		}).Info("ssh link found")
 		// Load the private key.
 		privateKey, err := ioutil.ReadFile(r.cfg.PrivateKeyPath)
 		if err != nil {
