@@ -309,11 +309,11 @@ func (r *Repository) getAuth() error {
 // Returns the go-git representation of the Git repository.
 // Returns an error if there was an issue cloning the repository.
 func (r *Repository) clone() (err error) {
+	logrus.Info("Git entry modified: ", r.cfg.URL, ", ", r.auth)
 	r.Repo, err = gogit.PlainClone(r.cfg.ClonePath, false, &gogit.CloneOptions{
 		URL:  r.cfg.URL,
 		Auth: r.auth,
 	})
-	logrus.Info("Git entry modified: ", r.cfg.URL, ", ", r.auth)
 	return err
 }
 
