@@ -46,6 +46,7 @@ git:
     # Should changes made by a manager (this program) be applied.
     # Set to true if using in sync mode
     apply_manager_commits: true
+    # token: <GITLAB TOKEN>
 
 
 # An alternative to Git synchronisation is the "simple sync" mode. This will

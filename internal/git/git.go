@@ -2,9 +2,10 @@ package git
 
 import (
 	"fmt"
-	"gopkg.in/src-d/go-git.v4/plumbing/storer"
 	"io/ioutil"
 	"os"
+
+	"gopkg.in/src-d/go-git.v4/plumbing/storer"
 
 	"github.com/bruce34/grafana-dashboards-manager/internal/config"
 
@@ -13,7 +14,8 @@ import (
 	gogit "gopkg.in/src-d/go-git.v4"
 	"gopkg.in/src-d/go-git.v4/plumbing"
 	"gopkg.in/src-d/go-git.v4/plumbing/object"
-	"gopkg.in/src-d/go-git.v4/plumbing/transport"
+	transport "gopkg.in/src-d/go-git.v4/plumbing/transport"
+	githttp "gopkg.in/src-d/go-git.v4/plumbing/transport/http"
 	gitssh "gopkg.in/src-d/go-git.v4/plumbing/transport/ssh"
 )
 
@@ -23,7 +25,7 @@ import (
 type Repository struct {
 	Repo *gogit.Repository
 	cfg  *config.GitSettings
-	auth *gitssh.PublicKeys
+	auth transport.AuthMethod
 }
 
 // NewRepository creates a new instance of the Repository structure and fills
@@ -295,7 +297,11 @@ func (r *Repository) getAuth() error {
 		return err
 	}
 
-	r.auth = &gitssh.PublicKeys{User: r.cfg.User, Signer: signer}
+	if r.cfg.URL[0:3] == "http" {
+		r.auth = &githttp.TokenAuth{Token: r.cfg.Token}
+	} else {
+		r.auth = &gitssh.PublicKeys{User: r.cfg.User, Signer: signer}
+	}
 	return nil
 }
 
@@ -373,13 +379,10 @@ func checkRemoteErrors(err error, logFields logrus.Fields) error {
 	switch err {
 	case gogit.NoErrAlreadyUpToDate:
 		nonError = true
-		break
 	case transport.ErrEmptyRemoteRepository:
 		nonError = true
-		break
 	default:
 		nonError = false
-		break
 	}
 
 	// Log non-error.
