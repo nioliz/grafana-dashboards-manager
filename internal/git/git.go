@@ -348,7 +348,9 @@ func (r *Repository) pull() error {
 			"error":      err,
 		})
 	}
-
+	logrus.WithFields(logrus.Fields{
+		"auth": r.auth,
+	}).Info("git.pull.vars")
 	r.Repo = repo
 
 	return err
