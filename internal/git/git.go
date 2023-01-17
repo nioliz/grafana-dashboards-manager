@@ -286,21 +286,24 @@ func (r *Repository) GetFilesContentsAtCommit(commit *object.Commit) (map[string
 // Returns an error if there was an issue reading the private key file or
 // parsing it.
 func (r *Repository) getAuth() error {
-	// Load the private key.
-	privateKey, err := ioutil.ReadFile(r.cfg.PrivateKeyPath)
-	if err != nil {
-		return err
-	}
-
-	// Parse the private key.
-	signer, err := ssh.ParsePrivateKey(privateKey)
-	if err != nil {
-		return err
-	}
 
 	if r.cfg.URL[0:3] == "http" {
+		logrus.Info("http[s] link found")
 		r.auth = &githttp.TokenAuth{Token: r.cfg.Token}
 	} else {
+		logrus.Info("ssh link found")
+		// Load the private key.
+		privateKey, err := ioutil.ReadFile(r.cfg.PrivateKeyPath)
+		if err != nil {
+			return err
+		}
+
+		// Parse the private key.
+		signer, err := ssh.ParsePrivateKey(privateKey)
+		if err != nil {
+			return err
+		}
+
 		r.auth = &gitssh.PublicKeys{User: r.cfg.User, Signer: signer}
 	}
 	return nil
