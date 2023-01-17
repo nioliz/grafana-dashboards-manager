@@ -313,7 +313,7 @@ func (r *Repository) clone() (err error) {
 		URL:  r.cfg.URL,
 		Auth: r.auth,
 	})
-
+	logrus.Info("Git entry modified: ", r.cfg.URL, ", ", r.auth)
 	return err
 }
 
