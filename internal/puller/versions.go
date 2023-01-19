@@ -7,9 +7,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/bruce34/grafana-dashboards-manager/internal/grafana"
-
 	"github.com/bruce34/grafana-dashboards-manager/internal/config"
+	"github.com/bruce34/grafana-dashboards-manager/internal/grafana"
 
 	gogit "gopkg.in/src-d/go-git.v4"
 	"gopkg.in/src-d/go-git.v4/plumbing/object"

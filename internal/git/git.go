@@ -54,7 +54,6 @@ func NewRepository(cfg *config.GitSettings) (r *Repository, invalidRepo bool, er
 
 	// Load authentication data in the structure instance.
 	err = r.getAuth()
-	logrus.Info("NewRepository")
 	return
 }
 
@@ -291,7 +290,6 @@ func (r *Repository) getAuth() error {
 		logrus.WithFields(logrus.Fields{
 			"URL": r.cfg.URL,
 		}).Info("http[s] link found")
-		//r.auth = &githttp.TokenAuth{Token: r.cfg.Token}
 		r.auth = &githttp.BasicAuth{Username: "PRIVATE-TOKEN", Password: r.cfg.Token}
 	} else {
 		logrus.WithFields(logrus.Fields{
@@ -318,11 +316,11 @@ func (r *Repository) getAuth() error {
 // Returns the go-git representation of the Git repository.
 // Returns an error if there was an issue cloning the repository.
 func (r *Repository) clone() (err error) {
-	logrus.Info("Git entry modified: ", r.cfg.URL, ", ", r.auth)
 	r.Repo, err = gogit.PlainClone(r.cfg.ClonePath, false, &gogit.CloneOptions{
 		URL:  r.cfg.URL,
 		Auth: r.auth,
 	})
+
 	return err
 }
 
@@ -338,7 +336,7 @@ func (r *Repository) pull() error {
 	if err != nil {
 		return err
 	}
-	logrus.Info("git.pull")
+
 	// Get its worktree.
 	w, err := repo.Worktree()
 	if err != nil {
@@ -356,9 +354,7 @@ func (r *Repository) pull() error {
 			"error":      err,
 		})
 	}
-	logrus.WithFields(logrus.Fields{
-		"auth": r.auth,
-	}).Info("git.pull.vars")
+
 	r.Repo = repo
 
 	return err
